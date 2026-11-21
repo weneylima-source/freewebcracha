@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FreeWebCrachá — Gerador de Crachás e Credenciais</title>
+<meta name="application-name" content="FreeWebCrachá">
+<meta name="author" content="Weney Lima de Araújo">
+<link rel="icon" type="image/png" href="img/icone-64.png">
+<link rel="apple-touch-icon" href="img/icone-180.png">
+<link rel="stylesheet" href="css/fontes.css">
+<link rel="stylesheet" href="css/interface.css">
+<link rel="stylesheet" href="css/cracha.css">
+<link rel="stylesheet" href="css/splash.css">
+<style id="pageStyle">@page { size: A4 portrait; margin: 0; }</style>
+<script src="js/tema.js"></script>
+</head>
+<body>
+<!-- =================== TELA DE ABERTURA =================== -->
+<div id="splash" role="dialog" aria-label="Boas-vindas ao FreeWebCrachá">
+  <div class="sp-aurora"><i></i><i></i><i></i><i></i></div>
+  <div class="sp-feixe"></div>
+  <div class="sp-estrelas" id="spEstrelas"></div>
+  <div class="sp-piso"></div>
+
+  <div class="sp-cracha c1"><div class="cordao"></div><div class="presilha"></div><div class="cartao"><div class="topo"><b></b></div><div class="foto"></div><div class="ln"></div><div class="ln s"></div><div class="ln t"></div><div class="cat">PALESTRANTE</div></div></div>
+  <div class="sp-cracha c2"><div class="cordao"></div><div class="presilha"></div><div class="cartao"><div class="topo"><b></b></div><div class="foto"></div><div class="ln"></div><div class="ln s"></div><div class="ln t"></div><div class="cat">VIP</div></div></div>
+  <div class="sp-cracha c3"><div class="cordao"></div><div class="presilha"></div><div class="cartao"><div class="topo"><b></b></div><div class="foto"></div><div class="ln"></div><div class="ln s"></div><div class="ln t"></div><div class="cat">STAFF</div></div></div>
+  <div class="sp-cracha c4"><div class="cordao"></div><div class="presilha"></div><div class="cartao"><div class="topo"><b></b></div><div class="foto"></div><div class="ln"></div><div class="ln s"></div><div class="ln t"></div><div class="cat">IMPRENSA</div></div></div>
+
+  <div class="sp-centro">
+    <div class="sp-logo"><div class="orb"></div><div class="miolo"><img src="img/icone.png" alt=""></div></div>
+    <div class="sp-selo"><i></i>Feiras · Congressos · Empresas · Eventos</div>
+    <div class="sp-tit-wrap"><h1 class="sp-titulo" id="spTitulo">FreeWebCrachá</h1></div>
+    <p class="sp-sub">Crie crachás e credenciais profissionais em minutos:<br><span class="sp-digita">pronto para imprimir hoje mesmo.</span></p>
+    <div class="sp-faixa"><div class="trilho">
+      <span>30 layouts</span><span>20 paletas de cores</span><span>20 marcas d'água</span><span>10 fontes + importação</span><span>QR Code e vCard</span><span>Lote por planilha CSV</span><span>Frente e verso</span><span>PDF e PNG 300 dpi</span><span>Marcas de corte</span>
+      <span>30 layouts</span><span>20 paletas de cores</span><span>20 marcas d'água</span><span>10 fontes + importação</span><span>QR Code e vCard</span><span>Lote por planilha CSV</span><span>Frente e verso</span><span>PDF e PNG 300 dpi</span><span>Marcas de corte</span>
+    </div></div>
+    <button class="sp-botao" id="spComecar" type="button">COMECE A CRIAR AGORA
+      <span class="seta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+    </button>
+    <div class="sp-rodape"><b>100% offline</b><span class="sep">•</span>sem cadastro<span class="sep">•</span>seus dados não saem do computador</div>
+  </div>
+  <div class="sp-onda"></div>
+</div>
+
+<!-- =================== CONFIRMAÇÃO "LIMPAR TUDO" =================== -->
+<div id="dlg" aria-hidden="true">
+  <div class="caixa" role="alertdialog" aria-modal="true" aria-labelledby="dlgTitulo">
+    <h2 id="dlgTitulo"><i>!</i>Limpar tudo?</h2>
+    <p>Isto apaga todos os dados do crachá: textos da frente e do verso, foto, logotipo, patrocinadores, registro profissional, código e a lista de pessoas importada (CSV).</p>
+    <p>O modelo, o layout, as cores, a fonte e as opções de impressão continuam como estão. Esta ação não pode ser desfeita.</p>
+    <div class="acoes">
+      <button class="btn" id="dlgNao" type="button">Cancelar</button>
+      <button class="btn perigo" id="dlgSim" type="button">Sim, limpar tudo</button>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <!-- =================== CONFIGURAÇÕES =================== -->
+  <section id="left">
+    <header>
+      <div class="brand">
+        <img class="appicon" alt="" src="img/icone-64.png">
+        <div class="bt"><h1>FreeWebCrachá</h1><p>Gerador de crachás corporativos (CR80) e credenciais para feiras, congressos e eventos</p></div>
+        <button class="btn sm tema" id="btnTema" title="Alternar tema claro / escuro"></button>
+      </div>
+    </header>
+    <div id="cfg">
+
+      <!-- 1 -->
+      <details class="sec" open>
+        <summary><span class="n">1</span>Modelo e tamanho</summary>
+        <div class="secb">
+          <label class="f"><span>Modelo</span><select id="modelo"></select></label>
+          <div class="info" id="modeloInfo"></div>
+          <div class="row3">
+            <label class="f"><span>Largura (mm)</span><input type="number" data-k="w" min="30" max="300" step="0.1"></label>
+            <label class="f"><span>Altura (mm)</span><input type="number" data-k="h" min="30" max="300" step="0.1"></label>
+            <label class="f"><span>Orientação</span>
+              <select id="orient"><option value="v">Vertical</option><option value="h">Horizontal</option></select>
+            </label>
+          </div>
+          <div class="row">
+            <label class="f"><span>Raio dos cantos arredondados (mm)</span><input type="number" data-k="raio" min="0" max="15" step="0.1"></label>
+            <label class="f"><span>Furos para cordão / presilha</span>
+              <select data-k="furoTipo">
+                <option value="centro">Um furo no meio (oblongo)</option>
+                <option value="dois">Dois furos, um em cada extremidade</option>
+                <option value="nenhum">Sem furo</option>
+              </select>
+            </label>
+          </div>
+          <div class="f"><span>Quais cantos ficam arredondados</span>
+            <div class="cantos">
+              <label class="chk"><input type="checkbox" data-canto="se"> Superior esquerdo</label>
+              <label class="chk"><input type="checkbox" data-canto="sd"> Superior direito</label>
+              <label class="chk"><input type="checkbox" data-canto="ie"> Inferior esquerdo</label>
+              <label class="chk"><input type="checkbox" data-canto="id"> Inferior direito</label>
+            </div>
+          </div>
+          <details>
+            <summary class="hint" style="cursor:pointer">Ver tabela de tamanhos recomendados</summary>
+            <table class="ref">
+              <tr><th>Tipo de uso</th><th>Tamanho</th><th>Orientação</th></tr>
+              <tr><td>Funcionário / Corporativo</td><td>8,56 × 5,4 cm (CR80)</td><td>Horizontal ou vertical</td></tr>
+              <tr><td>Visitante / Prestador</td><td>8,56 × 5,4 cm</td><td>Vertical</td></tr>
+              <tr><td>Congressos e feiras</td><td>10 × 14 cm</td><td>Vertical</td></tr>
+              <tr><td>Shows e festivais</td><td>9 × 13 cm</td><td>Vertical</td></tr>
+              <tr><td>Evento padrão médio</td><td>9 × 12 cm</td><td>Vertical</td></tr>
+              <tr><td>Muitos patrocinadores</td><td>12 × 15 cm</td><td>Vertical</td></tr>
+            </table>
+          </details>
+        </div>
+      </details>
+
+      <!-- 2 -->
+      <details class="sec" open>
+        <summary><span class="n">2</span>Layout, cores e fonte</summary>
+        <div class="secb">
+          <label class="f"><span>Layout do crachá (30 modelos)</span><select data-k="layout" id="selLayout"></select></label>
+          <div class="row">
+            <label class="f"><span>Logotipo no cabeçalho</span>
+              <select data-k="logoPos"><option value="layout">Conforme o layout</option><option value="lado">Ao lado do nome do evento</option><option value="acima">Acima do nome do evento</option></select>
+            </label>
+            <label class="f"><span>Texto do cabeçalho</span>
+              <select data-k="cabAlinh"><option value="layout">Conforme o layout</option><option value="esquerda">Alinhado à esquerda</option><option value="centro">Centralizado</option></select>
+            </label>
+          </div>
+          <label class="f"><span>Paleta de cores (20 paletas)</span><select id="selPaleta"></select></label>
+
+          <div class="cores">
+            <div class="cor" data-cor="cor1" data-nome="Principal"></div>
+            <div class="cor" data-cor="cor2" data-nome="Secundária"></div>
+            <div class="cor" data-cor="fundo" data-nome="Fundo"></div>
+            <div class="cor" data-cor="corTexto" data-nome="Texto"></div>
+          </div>
+          <p class="hint">Digite os valores de R (vermelho), G (verde) e B (azul), de 0 a 255, ou clique no quadradinho para escolher visualmente. Ao mudar uma cor, a paleta passa a ser "Personalizada".</p>
+
+          <div class="bloco">
+          <label class="f"><span>Fonte do crachá</span><select data-k="fonte" id="selFonte"></select></label>
+          <div class="amostra" id="amostraFonte">Maria Fernanda Souza · ÁÉÍÓÚ ãõç 0123</div>
+          <div class="f"><span>Importar fonte (.ttf, .otf, .woff ou .woff2)</span>
+            <div class="file"><label class="btn sm">Importar fonte<input type="file" accept=".ttf,.otf,.woff,.woff2,font/*" multiple id="fonteIn"></label></div>
+            <div class="fontesimp" id="fontesImp"></div>
+            <p class="hint">A fonte importada fica guardada na configuração e passa a aparecer na lista acima. Todas as fontes funcionam sem internet.</p>
+          </div>
+          </div>
+
+          <div class="bloco">
+            <label class="f"><span>Marca d'água no fundo (20 modelos)</span><select data-k="marca" id="selMarca"></select></label>
+            <div class="row" id="boxMarca">
+              <label class="f"><span>Cor da marca d'água</span>
+                <select data-k="marcaCor"><option value="c1">Cor principal</option><option value="c2">Cor secundária</option><option value="texto">Cor do texto</option><option value="cinza">Cinza</option></select>
+              </label>
+              <label class="f"><span>Intensidade: <b id="marcaOpacLbl"></b></span><input type="range" data-k="marcaOpac" min="3" max="40" step="1"></label>
+            </div>
+            <label class="chk" id="boxMarcaVerso"><input type="checkbox" data-k="marcaVerso"> Usar a marca d'água também no verso</label>
+          </div>
+
+          <div class="bloco">
+            <label class="f"><span>Cor da tarja da categoria (faixa inferior da frente)</span>
+              <select data-k="tarjaCor">
+                <option value="layout">Seguir o layout e a paleta de cores</option>
+                <option value="categoria">Cor própria de cada categoria</option>
+                <option value="personalizada">Cor personalizada</option>
+              </select>
+            </label>
+            <div class="f" id="boxCorCat"><span class="hint" style="margin:0;font-weight:600">Cor da categoria atual (RGB) — muda sozinha ao escolher Participante, Palestrante, Imprensa…</span>
+              <div class="cor cat-cor" data-cor="corCat"></div>
+            </div>
+            <div class="f" id="boxCorTarja"><span class="hint" style="margin:0;font-weight:600">Cor da tarja (RGB)</span>
+              <div class="cor cat-cor" data-cor="corTarja"></div>
+            </div>
+          </div>
+
+          <div class="bloco">
+            <div class="row">
+              <label class="f"><span>Moldura</span>
+                <select id="moldura"><option value="0">Sem moldura</option><option value="1">Com moldura</option></select>
+              </label>
+              <label class="f" id="boxMolEsp"><span>Espessura da moldura (mm)</span><input type="number" data-k="molduraEsp" min="0.2" max="10" step="0.1"></label>
+            </div>
+            <div class="f" id="boxMolCor"><span class="hint" style="margin:0;font-weight:600">Cor da moldura (RGB)</span>
+              <div class="cor cat-cor" data-cor="corMoldura"></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- 3 -->
+      <details class="sec" open>
+        <summary><span class="n">3</span>Dados da frente</summary>
+        <div class="secb">
+          <p class="hint">Desmarque <b>Exibir</b> para tirar um campo do crachá sem apagar o que foi digitado.</p>
+          <div class="f" data-campo="evento"><div class="lb"><span>Evento / empresa / instituição</span><label class="inc"><input type="checkbox" data-x="evento">Exibir</label></div><input type="text" data-k="evento"></div>
+          <div class="f" data-campo="subtitulo"><div class="lb"><span>Subtítulo (data, local, setor…)</span><label class="inc"><input type="checkbox" data-x="subtitulo">Exibir</label></div><input type="text" data-k="subtitulo"></div>
+          <div class="f" data-campo="nome"><div class="lb"><span>Nome completo</span><label class="inc"><input type="checkbox" data-x="nome">Exibir</label></div><input type="text" data-k="nome"></div>
+          <div class="f" data-campo="destaque"><div class="lb"><span>Nome em destaque (opcional — apelido ou primeiro nome)</span><label class="inc"><input type="checkbox" data-x="destaque">Exibir</label></div><input type="text" data-k="destaque" placeholder="Se preencher, aparece grande e o nome completo vai logo abaixo"></div>
+          <div class="f" data-campo="cargo"><div class="lb"><span>Cargo / função</span><label class="inc"><input type="checkbox" data-x="cargo">Exibir</label></div><input type="text" data-k="cargo"></div>
+          <div class="f" data-campo="empresa"><div class="lb"><span>Empresa / instituição</span><label class="inc"><input type="checkbox" data-x="empresa">Exibir</label></div><input type="text" data-k="empresa"></div>
+          <div class="f" data-campo="registro"><div class="lb"><span>Registro profissional (órgão e número)</span><label class="inc"><input type="checkbox" data-x="registro">Exibir</label></div>
+            <div class="regs">
+              <input type="text" data-k="regOrgao" list="orgList" placeholder="Órgão: CRP, CRM, OAB…">
+              <input type="text" data-k="regNumero" placeholder="Número: 01/12345">
+            </div>
+          </div>
+          <datalist id="orgList"><option value="CRP"><option value="CRM"><option value="CRO"><option value="COREN"><option value="CREA"><option value="CRF"><option value="CRN"><option value="CREFITO"><option value="CRESS"><option value="CRC"><option value="CRA"><option value="CAU"><option value="OAB"><option value="CRMV"><option value="CREF"><option value="CRBM"><option value="CRFa"></datalist>
+          <div class="f" data-campo="categoria"><div class="lb"><span>Categoria</span><label class="inc"><input type="checkbox" data-x="categoria">Exibir</label></div><input type="text" data-k="categoria" list="catList"></div>
+          <datalist id="catList"></datalist>
+          <div class="row">
+            <div class="f" data-campo="codigo"><div class="lb"><span>Código / matrícula</span><label class="inc"><input type="checkbox" data-x="codigo">Exibir</label></div><input type="text" data-k="codigo"></div>
+            <div class="f" data-campo="validade"><div class="lb"><span>Validade</span><label class="inc"><input type="checkbox" data-x="validade">Exibir</label></div><input type="date" data-k="validade"></div>
+          </div>
+        </div>
+      </details>
+
+      <!-- 4 -->
+      <details class="sec">
+        <summary><span class="n">4</span>Foto, logotipo e patrocinadores</summary>
+        <div class="secb">
+          <div class="f" data-campo="logo"><div class="lb"><span>Logotipo (cabeçalho)</span><label class="inc"><input type="checkbox" data-x="logo">Exibir</label></div>
+            <div class="file"><div class="thumb" id="thLogo"></div>
+              <label class="btn sm">Escolher imagem<input type="file" accept="image/*" data-img="logo"></label>
+              <button class="btn sm" data-clear="logo">Remover</button></div>
+          </div>
+          <div class="f" data-campo="foto"><div class="lb"><span>Foto da pessoa</span><label class="inc"><input type="checkbox" data-x="foto">Exibir</label></div>
+            <div class="file"><div class="thumb" id="thFoto" style="background-size:cover"></div>
+              <label class="btn sm">Escolher foto<input type="file" accept="image/*" data-img="foto"></label>
+              <button class="btn sm" data-clear="foto">Remover</button></div>
+          </div>
+          <label class="f"><span>Formato da foto</span>
+            <select data-k="fotoForma"><option value="redonda">Redonda</option><option value="quadrada">Quadrada</option><option value="retrato">Retrato 3×4</option></select>
+          </label>
+          <div class="f"><span>Logotipos de patrocinadores / apoiadores</span>
+            <div class="file"><label class="btn sm">Adicionar logotipos<input type="file" accept="image/*" multiple id="spIn"></label></div>
+            <div class="sponsors" id="spList"></div>
+          </div>
+          <div class="row">
+            <label class="f"><span>Onde mostrar os patrocinadores</span>
+              <select data-k="patrocLocal"><option value="verso">Verso</option><option value="frente">Frente</option><option value="ambos">Frente e verso</option><option value="nenhum">Não mostrar</option></select>
+            </label>
+            <label class="f"><span>Título da área</span><input type="text" data-k="patrocTitulo"></label>
+          </div>
+        </div>
+      </details>
+
+      <!-- 5 -->
+      <details class="sec">
+        <summary><span class="n">5</span>QR Code</summary>
+        <div class="secb">
+          <div class="row">
+            <label class="f"><span>Onde mostrar</span>
+              <select data-k="qrLocal"><option value="frente">Frente</option><option value="verso">Verso</option><option value="ambos">Frente e verso</option><option value="nenhum">Não mostrar</option></select>
+            </label>
+            <label class="f"><span>Conteúdo</span>
+              <select data-k="qrTipo"><option value="codigo">Só o código</option><option value="vcard">Cartão de contato (vCard)</option><option value="texto">Texto ou link personalizado</option></select>
+            </label>
+          </div>
+          <label class="f" id="qrTextoBox"><span>Texto ou link do QR Code</span><input type="text" data-k="qrTexto"></label>
+          <p class="hint">No texto, pode usar {nome}, {cargo}, {empresa}, {registro}, {categoria} e {codigo}. O QR Code usa os dados mesmo que o campo esteja oculto no crachá. O código escrito junto do QR segue a opção <b>Exibir</b> do campo Código.</p>
+        </div>
+      </details>
+
+      <!-- 6 -->
+      <details class="sec">
+        <summary><span class="n">6</span>Verso</summary>
+        <div class="secb">
+          <label class="f"><span>Título do verso</span><input type="text" data-k="versoTitulo"></label>
+          <label class="f"><span>Texto (regras, instruções, programação…)</span><textarea data-k="versoTexto" rows="6"></textarea></label>
+          <label class="f"><span>Alinhamento do texto do verso</span>
+            <select data-k="versoAlinh"><option value="left">À esquerda</option><option value="center">Centralizado</option><option value="justify">Justificado</option></select>
+          </label>
+          <label class="f"><span>Rodapé (site, telefone, contato)</span><input type="text" data-k="contato"></label>
+          <label class="chk"><input type="checkbox" data-k="versoAssinatura"> Linha de assinatura do responsável</label>
+          <label class="f"><span>Texto da linha de assinatura</span><input type="text" data-k="assinTexto"></label>
+        </div>
+      </details>
+
+      <!-- 8 -->
+      <details class="sec">
+        <summary><span class="n">7</span>Lote: vários crachás a partir de planilha (CSV)</summary>
+        <div class="secb">
+          <p class="hint">Salve a planilha como CSV (Excel ou LibreOffice: <i>Salvar como → CSV</i>). A primeira linha deve ter os títulos das colunas: <b>nome</b>, <b>destaque</b>, <b>cargo</b>, <b>empresa</b>, <b>orgao</b>, <b>registro</b>, <b>categoria</b>, <b>codigo</b>, <b>validade</b>. Só a coluna <b>nome</b> é obrigatória; o que faltar vem do formulário.</p>
+          <div class="btns">
+            <label class="btn sm">Importar CSV<input type="file" accept=".csv,text/csv,text/plain" id="csvIn" style="display:none"></label>
+            <button class="btn sm" id="csvModelo">Baixar planilha de exemplo</button>
+            <button class="btn sm" id="csvLimpar">Limpar lote</button>
+          </div>
+          <div class="info hidden" id="csvInfo"></div>
+        </div>
+      </details>
+
+      <!-- 9 -->
+      <details class="sec" open>
+        <summary><span class="n">8</span>Impressão e exportação</summary>
+        <div class="secb">
+          <div class="row">
+            <label class="f"><span>Papel</span>
+              <select data-k="papel"><option value="A4">A4 (210 × 297 mm)</option><option value="A3">A3 (297 × 420 mm)</option><option value="Carta">Carta (216 × 279 mm)</option><option value="Oficio">Ofício (216 × 330 mm)</option></select>
+            </label>
+            <label class="f"><span>Orientação da folha</span>
+              <select data-k="papelOrient"><option value="retrato">Retrato</option><option value="paisagem">Paisagem</option></select>
+            </label>
+          </div>
+          <label class="f"><span>O que imprimir</span>
+            <select data-k="impModo">
+              <option value="duplex">Frente e verso (folhas alternadas, para impressão duplex)</option>
+              <option value="lado">Frente e verso lado a lado (para dobrar)</option>
+              <option value="frente">Só a frente</option>
+              <option value="verso">Só o verso</option>
+            </select>
+          </label>
+          <div class="row3">
+            <label class="f"><span>Cópias</span><input type="number" data-k="copias" min="1" max="500"></label>
+            <label class="f"><span>Margem (mm)</span><input type="number" data-k="margem" min="0" max="40"></label>
+            <label class="f"><span>Espaço (mm)</span><input type="number" data-k="espaco" min="0" max="40"></label>
+          </div>
+          <label class="chk"><input type="checkbox" data-k="marcasCorte"> Marcas de corte</label>
+          <div class="info" id="impInfo"></div>
+          <p class="hint">Para gerar PDF, clique em Imprimir e escolha <i>Salvar como PDF</i>. Deixe a escala em 100% (tamanho real) e ative "Gráficos de plano de fundo" se as cores não aparecerem.</p>
+          <div class="btns">
+            <button class="btn pri" id="btnPrint">Imprimir / salvar PDF</button>
+            <button class="btn" id="btnPng">Exportar PNG (300 dpi)</button>
+          </div>
+        </div>
+      </details>
+
+      <!-- 10 -->
+      <details class="sec">
+        <summary><span class="n">9</span>Salvar e abrir modelo</summary>
+        <div class="secb">
+          <p class="hint">O que você configura fica guardado neste navegador automaticamente. Para levar para outro computador ou ter vários modelos, salve um arquivo de configuração.</p>
+          <div class="btns">
+            <button class="btn sm" id="btnSave">Salvar configuração (.json)</button>
+            <label class="btn sm">Abrir configuração<input type="file" accept=".json,application/json" id="jsonIn" style="display:none"></label>
+            <button class="btn sm" id="btnReset">Restaurar padrão</button>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- =================== PRÉ-VISUALIZAÇÃO =================== -->
+  <section id="right">
+    <div id="stageWrap">
+      <div id="recNav" class="hidden">
+        <button class="btn sm" id="recPrev">◀</button><span id="recLbl"></span><button class="btn sm" id="recNext">▶</button>
+      </div>
+      <div id="stage"></div>
+    </div>
+    <div id="bar">
+      <div class="dim" id="dimLbl"></div>
+      <div class="seg" id="viewSeg">
+        <button data-v="frente">Frente</button><button data-v="verso">Verso</button><button data-v="ambos">Ambos</button>
+      </div>
+      <div class="acts"><button class="btn sm limpar" id="btnLimpar" title="Apagar todos os dados do crachá">Limpar tudo</button><button class="btn sm" id="btnPrint2">Imprimir</button><button class="btn sm" id="btnPng2">PNG</button></div>
+    </div>
+  </section>
+</div>
+<div id="printArea"></div>
+<div id="exp"></div>
+<div id="toast"></div>
+
+<script src="js/lib/qrcode.js"></script>
+<script src="js/lib/html2canvas.min.js"></script>
+<script src="js/dados.js"></script>
+<script src="js/marcas.js"></script>
+<script src="js/cracha.js"></script>
+<script src="js/lote.js"></script>
+<script src="js/impressao.js"></script>
+<script src="js/app.js"></script>
+<script src="js/splash.js"></script>
+</body>
+</html>
